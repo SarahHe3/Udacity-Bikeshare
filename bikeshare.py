@@ -6,6 +6,12 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
+def input_mod(input_print,error_print,enterable_list):
+    ret = input(input_print).title()
+    while ret not in enterable_list:
+        ret = input(error_print).title()
+    return ret
+
 def get_filters():
     """
     Asks user to specify a city, month, and day to analyze.
@@ -17,24 +23,22 @@ def get_filters():
     """
     print('Hello! Let\'s explore some US bikeshare data!')
     # TO DO: get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    cities = ("Chicago", "New York City", "Washington")
-    city = input("which city you want to explore? Chicago, New York City or Washington?\n").title()
-    while city not in cities:
-        city = input("Wrong input! Please enter again.\n").title()
+    cities = ("Chicago", "New York City", "Washington") 
+    city = input_mod("which city you want to explore? Chicago, New York City or Washington?\n",
+              'Error!Please input the correct city name.\n',
+              cities)
         
-
     # TO DO: get user input for month (all, january, february, ... , june)
     months = ("January", "February", "March", "April", "May", "June", "All")
-    month = input("Which month you want to see? January, February, March, April, May, June or All?\n").title()
-    while month not in months:
-        month = input("Wrong input! Please enter again.\n").title()
+    month = input_mod("Which month you want to see? January, February, March, April, May, June or All?\n",
+                      "Wrong input! Please enter again.\n",
+                      months)
 
     # TO DO: get user input for day of week (all, monday, tuesday, ... sunday)
     days = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "All")
-    day = input("Which day you want to see? Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, or All?\n").title()
-    while day not in days:
-        day = input("Wrong input! Please enter again.\n").title()
-                
+    day = input_mod("Which day you want to see? Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, or All?\n",
+                    "Wrong input! Please enter again.\n",
+                    days)      
 
     print('-'*40)
     return city, month, day
@@ -103,8 +107,8 @@ def station_stats(df):
     print('The most commonly used end station is:', popular_end_station)
 
     # TO DO: display most frequent combination of start station and end station trip
-    trip = df.groupby(['Start Station', 'End Station']).Gender.count().sort_values(ascending=False)
-    print('The most frequent combination of start station and end station trip is {} with a number of {} times'.format(trip.index[0],trip.max()))
+     trip = df.groupby(['Start Station', 'End Station']).size().idxmax()
+    print('The most frequent combination of start station and end station trip is {} with a number of {} times'.format(trip[0],trip[1]))
           
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
